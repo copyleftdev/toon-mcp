@@ -1,0 +1,65 @@
+#!/bin/bash
+# Demo helper script for toon-mcp
+
+SCRIPT_DIR="$(dirname "$0")"
+TOON_MCP="$SCRIPT_DIR/target/release/toon-mcp"
+
+call_tool() {
+    local tool="$1"
+    local args="$2"
+    (printf '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"demo","version":"1.0"}}}\n'
+     sleep 0.1
+     printf '{"jsonrpc":"2.0","method":"notifications/initialized"}\n'
+     sleep 0.1
+     printf '{"jsonrpc":"2.0","id":2,"method":"tools/call","params":{"name":"%s","arguments":%s}}\n' "$tool" "$args"
+     sleep 0.2) | "$TOON_MCP" 2>/dev/null | grep '"id":2'
+}
+
+case "$1" in
+    encode)
+        JSON=$(cat "$2" | jq -c .)
+        echo ""
+        echo "┌─────────────────────────────────────────────┐"
+        echo "│ JSON Input                                  │"
+        echo "├─────────────────────────────────────────────┤"
+        cat "$2" | jq . | sed 's/^/│ /'
+        echo "└─────────────────────────────────────────────┘"
+        echo ""
+        echo "              ▼ toon_encode ▼"
+        echo ""
+        echo "┌─────────────────────────────────────────────┐"
+        echo "│ TOON Output                                 │"
+        echo "├─────────────────────────────────────────────┤"
+        TOON=$(call_tool "toon_encode" "{\"json\":$JSON}" | jq -r '.result.content[0].text')
+        echo "$TOON" | sed 's/^/│ /'
+        echo "└─────────────────────────────────────────────┘"
+        echo ""
+        ;;
+    stats)
+        JSON=$(cat "$2" | jq -c .)
+        STATS=$(call_tool "toon_stats" "{\"json\":$JSON}" | jq '.result.structuredContent')
+
+        JSON_BYTES=$(echo "$STATS" | jq '.json.bytes')
+        JSON_TOKENS=$(echo "$STATS" | jq '.json.tokens_approx')
+        TOON_BYTES=$(echo "$STATS" | jq '.toon.bytes')
+        TOON_TOKENS=$(echo "$STATS" | jq '.toon.tokens_approx')
+        BYTE_SAVE=$(echo "$STATS" | jq '.savings.bytes_percent')
+        TOKEN_SAVE=$(echo "$STATS" | jq '.savings.tokens_percent')
+
+        echo ""
+        echo "┌─────────────────────────────────────────────┐"
+        echo "│ Format Comparison                           │"
+        echo "├──────────────┬──────────────┬───────────────┤"
+        echo "│              │    Bytes     │    Tokens     │"
+        echo "├──────────────┼──────────────┼───────────────┤"
+        printf "│ JSON         │ %10s   │ %10s    │\n" "$JSON_BYTES" "$JSON_TOKENS"
+        printf "│ TOON         │ %10s   │ %10s    │\n" "$TOON_BYTES" "$TOON_TOKENS"
+        echo "├──────────────┼──────────────┼───────────────┤"
+        printf "│ Savings      │ %9s%%   │ %9s%%    │\n" "$BYTE_SAVE" "$TOKEN_SAVE"
+        echo "└──────────────┴──────────────┴───────────────┘"
+        echo ""
+        ;;
+    *)
+        echo "Usage: toon-demo [encode|stats] <json-file>"
+        ;;
+esac
