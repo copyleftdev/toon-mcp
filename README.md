@@ -12,7 +12,8 @@ cargo build --release
 
 ### Claude Desktop
 
-Add to `claude_desktop_config.json`:
+Add to `~/Library/Application Support/Claude/claude_desktop_config.json` (macOS) or `%APPDATA%\Claude\claude_desktop_config.json` (Windows):
+
 ```json
 {
   "mcpServers": {
@@ -23,11 +24,75 @@ Add to `claude_desktop_config.json`:
 }
 ```
 
-### Direct Testing
+### Claude Code CLI
+
+Add to `~/.claude/settings.json`:
+
+```json
+{
+  "mcpServers": {
+    "toon": {
+      "command": "/path/to/toon-mcp"
+    }
+  }
+}
+```
+
+Or for project-specific configuration, create `.mcp.json` in your project root:
+
+```json
+{
+  "mcpServers": {
+    "toon": {
+      "command": "/path/to/toon-mcp"
+    }
+  }
+}
+```
+
+### Cursor IDE
+
+Add to `.cursor/mcp.json` in your project:
+
+```json
+{
+  "mcpServers": {
+    "toon": {
+      "command": "/path/to/toon-mcp"
+    }
+  }
+}
+```
+
+### Generic MCP Client
+
+The server uses stdio transport. Connect by spawning the process and communicating via stdin/stdout:
 
 ```bash
-# Initialize and call a tool
-echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"test","version":"1.0"}}}' | ./target/release/toon-mcp
+# Start server and send initialize request
+echo '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2024-11-05","capabilities":{},"clientInfo":{"name":"my-client","version":"1.0"}}}' | ./toon-mcp
+```
+
+Example in Node.js:
+
+```javascript
+const { spawn } = require('child_process');
+const server = spawn('./toon-mcp');
+
+server.stdout.on('data', (data) => {
+  console.log('Response:', JSON.parse(data));
+});
+
+server.stdin.write(JSON.stringify({
+  jsonrpc: "2.0",
+  id: 1,
+  method: "initialize",
+  params: {
+    protocolVersion: "2024-11-05",
+    capabilities: {},
+    clientInfo: { name: "my-client", version: "1.0" }
+  }
+}) + '\n');
 ```
 
 ## Tools
