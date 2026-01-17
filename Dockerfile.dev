@@ -1,5 +1,5 @@
 # Development Dockerfile with cargo-watch for hot reloading
-FROM rust:1.83-slim-bookworm
+FROM rust:slim-bookworm
 
 # Install build dependencies and development tools
 RUN apt-get update && apt-get install -y \
