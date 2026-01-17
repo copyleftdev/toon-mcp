@@ -1,0 +1,42 @@
+# Build artifacts
+target/
+*.pdb
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+*.md
+!README.md
+docs/
+
+# Demo files
+demo.gif
+demo.tape
+
+# Local development
+.env
+.env.*
+*.log
+
+# Testing
+tests/
+coverage/
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# Docker files (don't need to copy these into the build context)
+Dockerfile*
+docker-compose*.yml
+.dockerignore
