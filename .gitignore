@@ -1,0 +1,16 @@
+# Build artifacts
+/target/
+Cargo.lock
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local Claude config (optional - keep CLAUDE.md, ignore local overrides)
+CLAUDE.local.md
