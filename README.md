@@ -7,6 +7,10 @@ MCP server exposing TOON format for LLM cost optimization. **18-40% token saving
 
 **Repository:** [github.com/copyleftdev/toon-mcp](https://github.com/copyleftdev/toon-mcp)
 
+## Demo
+
+![TOON MCP Server Demo](demo.gif)
+
 ## Installation
 
 ```bash
