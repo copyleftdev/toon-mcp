@@ -1,6 +1,11 @@
 # TOON MCP Server
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/rust-1.70%2B-blue.svg)](https://www.rust-lang.org/)
+
 MCP server exposing TOON format for LLM cost optimization. **18-40% token savings** over JSON.
+
+**Repository:** [github.com/copyleftdev/toon-mcp](https://github.com/copyleftdev/toon-mcp)
 
 ## Installation
 
@@ -162,6 +167,10 @@ cargo clippy         # Lint
 cargo fmt            # Format
 ```
 
+## Contributing
+
+Contributions are welcome! Please open an issue or submit a PR at [github.com/copyleftdev/toon-mcp](https://github.com/copyleftdev/toon-mcp).
+
 ## License
 
-MIT
+MIT - See [LICENSE](LICENSE) for details.

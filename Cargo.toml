@@ -4,6 +4,11 @@ version = "0.1.0"
 edition = "2021"
 description = "MCP server for TOON format - token-efficient JSON alternative for LLM prompts"
 license = "MIT"
+authors = ["copyleftdev"]
+repository = "https://github.com/copyleftdev/toon-mcp"
+homepage = "https://github.com/copyleftdev/toon-mcp"
+keywords = ["mcp", "toon", "json", "llm", "token-optimization"]
+categories = ["encoding", "development-tools"]
 
 [[bin]]
 name = "toon-mcp"
